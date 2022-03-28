@@ -7,7 +7,7 @@ function start () { // starta o jogo
     $("#fundoGame").append("<div id='amigo' class='amigo'></div>");
 
     // Principais variaveis do jogo
-
+    var podeAtirar = true;
     var jogo = { }; // variavel vazia 
     var velocidade = 3;
     var posicaoY = parseInt(Math.random() * 334);
@@ -18,6 +18,7 @@ function start () { // starta o jogo
         }
     
     jogo.pressionou = [];
+
 
 
 
@@ -43,9 +44,9 @@ function start () { // starta o jogo
         moveinimigo1();
         moveinimigo2();
         moveamigo();
+        colisao();
         
     }// fim da função loop
-    
 
     //função que movimenta o fundo
 
@@ -81,7 +82,7 @@ function start () { // starta o jogo
         
         if (jogo.pressionou[TECLA.D]) {
             
-            //Chama função Disparo	
+            disparo();	
         }
     }
 
@@ -119,8 +120,50 @@ function start () { // starta o jogo
                 $("#amigo").css("left",0);
                         
             }
+    
     } // fim da função moveamigo()
 
 
+    function disparo() {
+	
+        if (podeAtirar==true) {
+            
+            podeAtirar=false;
+        
+            topo = parseInt($("#jogador").css("top"))
+            posicaoX= parseInt($("#jogador").css("left"))
+            tiroX = posicaoX + 190;
+            topoTiro=topo+37;
+            $("#fundoGame").append("<div id='disparo'></div");
+            $("#disparo").css("top",topoTiro);
+            $("#disparo").css("left",tiroX);
+        
+            var tempoDisparo=window.setInterval(executaDisparo, 30);
+        
+        } //Fecha podeAtirar
+     
+        function executaDisparo() {
+            posicaoX = parseInt($("#disparo").css("left"));
+            $("#disparo").css("left",posicaoX+15); 
+    
+            if (posicaoX>900) {
+                            
+                window.clearInterval(tempoDisparo);
+                tempoDisparo=null;
+                $("#disparo").remove();
+                podeAtirar=true;
+                        
+            }
+        } // Fecha executaDisparo()
+    } // Fecha disparo()
+
+
+    function colisao() {
+        var colisao1 = ($("#jogador").collision($("#inimigo1")));
+        // jogador com o inimigo1
+    
+        console.log(colisao1);
+    
+    } //Fim da função colisao()
 
 }//fim start
